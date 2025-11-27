@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Sobre mí • konnyV</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Manrope:wght@300;500;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --lila: #a855f7;
+    --fucsia: #e945c2;
+    --bg: #0f001a;
+    --text: #e8d9ff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    background:var(--bg); color:var(--text); font-family:'Manrope',sans-serif;
+    overflow-x:hidden; cursor:none; line-height:1.8;
+  }
+
+  /* Cursor mágico (igual que la home) */
+  #cursor {
+    position:fixed; width:36px; height:36px; border-radius:50%; pointer-events:none; z-index:9999;
+    background:radial-gradient(circle, var(--fucsia) 15%, transparent 70%);
+    mix-blend-mode:screen; box-shadow:0 0 50px var(--lila); transition:transform .15s;
+    transform:translate(-50%,-50%); left:0; top:0;
+  }
+
+  /* Nav idéntica */
+  nav {
+    position:fixed; top:0; left:0; right:0; padding:20px 5vw; display:flex; justify-content:space-between;
+    align-items:center; z-index:1000; backdrop-filter:blur(20px); background:rgba(15,0,26,0.8);
+    transition:.4s;
+  }
+  nav.scrolled { padding:15px 5vw; background:rgba(15,0,26,0.95); }
+  .logo { font-family:'Playfair Display'; font-size:clamp(38px,9vw,56px);
+    background:linear-gradient(90deg,var(--lila),var(--fucsia)); -webkit-background-clip:text; color:transparent; }
+  .nav-links { display:flex; gap:clamp(20px,5vw,50px); list-style:none; }
+  .nav-links a { color:#ccc; text-decoration:none; font-weight:500; font-size:clamp(16px,4vw,19px); transition:.3s; }
+  .nav-links a:hover { color:white; text-shadow:0 0 15px var(--fucsia); }
+  .menu-toggle { display:none; font-size:28px; color:white; cursor:pointer; }
+
+  /* Hero de la página About */
+  #about-hero {
+    height:80vh; min-height:600px; display:flex; align-items:center; justify-content:center;
+    text-align:center; position:relative; overflow:hidden;
+  }
+  #about-hero::before {
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(135deg,rgba(107,33,168,0.8),rgba(233,69,194,0.6));
+  }
+  #about-hero img {
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:brightness(0.45);
+  }
+  .about-title {
+    position:relative; z-index:2; padding:0 20px;
+  }
+  .about-title h1 {
+    font-family:'Playfair Display'; font-size:clamp(60px,11vw,140px);
+    background:linear-gradient(90deg,var(--lila),var(--fucsia)); -webkit-background-clip:text; color:transparent;
+    margin-bottom:20px;
+  }
+
+  /* Contenido principal */
+  .content {
+    max-width:900px; margin:0 auto; padding:120px 5vw 100px;
+  }
+  .bio-text {
+    font-size:clamp(18px,4vw,22px); text-align:center; margin-bottom:60px; opacity:0.95;
+  }
+  .bio-text strong { color:var(--fucsia); }
+
+  .photos-grid {
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:30px; margin:80px 0;
+  }
+  .bio-photo {
+    border-radius:28px; overflow:hidden; box-shadow:0 25px 70px rgba(0,0,0,0.6);
+    transition:.5s;
+  }
+  .bio-photo:hover { transform:translateY(-15px); box-shadow:0 40px 90px rgba(233,69,194,0.5); }
+  .bio-photo img { width:100%; height:420px; object-fit:cover; }
+
+  .quote {
+    font-family:'Playfair Display'; font-size:clamp(28px,6vw,44px); text-align:center;
+    margin:100px auto; max-width:800px; font-style:italic; opacity:0.9;
+    background:linear-gradient(90deg,var(--lila),var(--fucsia)); -webkit-background-clip:text; color:transparent;
+  }
+
+  /* Footer igual que la home */
+  footer {
+    padding:130px 5vw 90px; text-align:center;
+    background:linear-gradient(to top,#0a0014 0%,transparent 70%);
+    border-top:1px solid rgba(233,69,194,0.2);
+  }
+  footer .logo { font-size:clamp(48px,11vw,66px); margin-bottom:20px; }
+  .socials {
+    display:flex; justify-content:center; flex-wrap:wrap; gap:32px; margin:50px 0 40px;
+  }
+  .socials a {
+    width:70px; height:70px; border-radius:50%; background:rgba(233,69,194,0.15);
+    display:grid; place-items:center; font-size:34px; color:white;
+    border:2px solid var(--fucsia); transition:.5s;
+  }
+  .socials a:hover {
+    background:var(--fucsia); transform:scale(1.25) translateY(-14px);
+    box-shadow:0 30px 60px rgba(233,69,194,0.8);
+  }
+  footer p { opacity:0.8; font-size:18px; margin:20px 0; }
+  footer .credits { font-size:15px; opacity:0.6; }
+
+  @media (max-width:768px) {
+    .nav-links { position:fixed; top:80px; left:0; right:0; background:var(--bg); flex-direction:column;
+      padding:50px 20px; gap:35px; transform:translateY(-150%); transition:.5s; text-align:center; }
+    .nav-links.active { transform:translateY(0); }
+    .menu-toggle { display:block; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<nav id="nav">
+  <div class="logo">konnyV</div>
+  <i class="fas fa-bars menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')"></i>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#singles">Música</a>
+    <a href="index.html#photos">Fotos</a>
+    <a href="#">Sobre mí</a>
+    <a href="#contact">Contacto</a>
+  </div>
+</nav>
+
+<!-- HERO ABOUT -->
+<section id="about-hero">
+  <img src="Konny.jpg" alt="konnyV">
+  <div class="about-title">
+    <h1>Sobre mí</h1>
+  </div>
+</section>
+
+<div class="content">
+  <p class="bio-text">
+    Hola, soy <strong>konnyV</strong>.<br><br>
+    Nací para transformar emociones en beats y sueños en melodías. Mi música es un viaje entre lo dulce y lo eléctrico, entre lágrimas lilas y noches fucsias. 
+    Cada canción es una parte de mi alma que decido compartir con el mundo.<br><br>
+    Desde muy pequeña supe que la música era mi idioma. Hoy, con millones de streams y escenarios que nunca imaginé, sigo siendo la misma niña que cantaba frente al espejo… pero ahora con más brillo violeta en los ojos ♡
+  </p>
+
+  <div class="photos-grid">
+    <div class="bio-photo"><img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800" alt=""></div>
+    <div class="bio-photo"><img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800" alt=""></div>
+    <div class="bio-photo"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800" alt=""></div>
+    <div class="bio-photo"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800" alt=""></div>
+  </div>
+
+  <div class="quote">
+    “La música no es lo que hago…<br>es lo que soy.”
+  </div>
+</div>
+
+<footer>
+  <div class="logo">konnyV</div>
+  <div class="socials">
+    <a href="https://instagram.com/konnyv" target="_blank"><i class="fab fa-instagram"></i></a>
+    <a href="https://x.com/konnyv" target="_blank"><i class="fab fa-x-twitter"></i></a>
+    <a href="https://tiktok.com/@konnyv" target="_blank"><i class="fab fa-tiktok"></i></a>
+    <a href="https://open.spotify.com/artist/TU_ID" target="_blank"><i class="fab fa-spotify"></i></a>
+    <a href="https://youtube.com/@konnyv" target="_blank"><i class="fab fa-youtube"></i></a>
+  </div>
+  <p>© 2025 konnyV • Todos los derechos reservados</p>
+  <div class="credits">Web creada por Denis Chiribga</div>
+</footer>
+
+<script>
+  // Cursor
+  document.addEventListener('mousemove', e => {
+    document.getElementById('cursor').style.left = e.clientX + 'px';
+    document.getElementById('cursor').style.top = e.clientY + 'px';
+  });
+
+  // Nav scroll
+  window.addEventListener('scroll', () => document.getElementById('nav').classList.toggle('scrolled', scrollY > 50));
+</script>
+
+</body>
+</html>

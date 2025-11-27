@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>konnyV</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Manrope:wght@300;500;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --lila: #a855f7;
+        --fucsia: #e945c2;
+        --bg: #0f001a;
+        --text: #e8d9ff;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Manrope", sans-serif;
+        overflow-x: hidden;
+        cursor: none;
+      }
+
+      #cursor {
+        position: fixed;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999999;
+        background: radial-gradient(circle, var(--fucsia) 15%, transparent 70%);
+        mix-blend-mode: screen;
+        box-shadow: 0 0 50px var(--lila);
+        transition: transform 0.15s;
+        transform: translate(-50%, -50%);
+        left: 0;
+        top: 0;
+      }
+
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 20px 5vw;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(20px);
+        background: rgba(15, 0, 26, 0.8);
+        transition: 0.4s;
+      }
+      nav.scrolled {
+        padding: 15px 5vw;
+        background: rgba(15, 0, 26, 0.95);
+      }
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(38px, 9vw, 56px);
+        background: linear-gradient(90deg, var(--lila), var(--fucsia));
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+      .nav-links {
+        display: flex;
+        gap: clamp(20px, 5vw, 50px);
+        list-style: none;
+      }
+      .nav-links a {
+        color: #ccc;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: clamp(16px, 4vw, 19px);
+      }
+      .nav-links a:hover {
+        color: white;
+        text-shadow: 0 0 15px var(--fucsia);
+      }
+      .menu-toggle {
+        display: none;
+        font-size: 28px;
+        color: white;
+        cursor: pointer;
+      }
+
+      #hero {
+        height: 100vh;
+        min-height: 620px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      #hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(107, 33, 168, 0.7),
+          rgba(233, 69, 194, 0.5)
+        );
+        z-index: 1;
+      }
+      #hero img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.5);
+      }
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 0 20px;
+      }
+      .hero-content h1 {
+        font-family: "Playfair Display";
+        font-size: clamp(64px, 12vw, 170px);
+        margin-bottom: 10px;
+        background: linear-gradient(90deg, var(--lila), var(--fucsia));
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+      .hero-content p {
+        font-size: clamp(19px, 5vw, 27px);
+        margin: 20px 0 45px;
+        opacity: 0.9;
+      }
+      .btn {
+        padding: 18px 60px;
+        background: linear-gradient(45deg, var(--lila), var(--fucsia));
+        border: none;
+        border-radius: 50px;
+        color: white;
+        font-size: 19px;
+        cursor: pointer;
+        box-shadow: 0 12px 40px rgba(233, 69, 194, 0.5);
+        transition: 0.4s;
+      }
+      .btn:hover {
+        transform: scale(1.08);
+        box-shadow: 0 20px 60px rgba(233, 69, 194, 0.7);
+      }
+
+      section {
+        padding: 110px 5vw 80px;
+      }
+      h2 {
+        font-family: "Playfair Display";
+        font-size: clamp(50px, 10vw, 76px);
+        text-align: center;
+        margin-bottom: 70px;
+        background: linear-gradient(90deg, var(--lila), var(--fucsia));
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+        gap: 45px;
+        max-width: 1600px;
+        margin: 0 auto;
+      }
+      .single {
+        background: rgba(107, 33, 168, 0.3);
+        border-radius: 30px;
+        overflow: hidden;
+        border: 1px solid rgba(169, 85, 247, 0.3);
+        transition: 0.6s;
+        cursor: pointer;
+      }
+      .single:hover {
+        transform: translateY(-22px);
+        border-color: var(--fucsia);
+        box-shadow: 0 35px 90px rgba(233, 69, 194, 0.5);
+      }
+      .single img {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+      }
+      .single h3 {
+        padding: 26px;
+        font-size: 28px;
+        text-align: center;
+        background: linear-gradient(var(--lila), var(--fucsia));
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+
+      /* CARRUSEL + DOTS */
+      .carousel-container {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 40px; /* deja espacio para ver las previas */
+      }
+
+      .carousel {
+        display: flex;
+        overflow-x: scroll;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        gap: 20px;
+        padding: 20px 0;
+      }
+
+      .carousel::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Cada foto "centra" con snap */
+      .photo {
+        flex: 0 0 70%; /* ocupa 70% → deja previas visibles */
+        scroll-snap-align: center;
+        border-radius: 20px;
+        object-fit: cover;
+        transition: transform 0.4s ease, opacity 0.4s ease;
+      }
+
+      /* Efecto: la imagen del centro se agranda un poco */
+      .carousel img {
+        opacity: 0.6;
+        transform: scale(0.9);
+      }
+
+      .carousel img.active {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .photo:hover {
+        transform: scale(1.04);
+      }
+      .photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .dots {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-top: 35px;
+      }
+      .dot {
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+        transition: 0.4s;
+      }
+      .dot.active {
+        background: var(--fucsia);
+        transform: scale(1.5);
+      }
+
+      /* SPOTIFY EMBEDS */
+      .spotify-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 40px;
+        max-width: 1200px;
+        margin: 80px auto 0;
+      }
+
+      /* FOOTER ÚNICO Y PRECIOSO */
+      footer {
+        padding: 120px 5vw 80px;
+        text-align: center;
+        background: linear-gradient(to top, #0a0014 0%, transparent 80%);
+        border-top: 1px solid rgba(233, 69, 194, 0.2);
+      }
+      footer .logo {
+        font-size: clamp(46px, 10vw, 62px);
+        margin-bottom: 30px;
+      }
+      .socials {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 30px;
+        margin: 50px 0 40px;
+      }
+      .socials a {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+        background: rgba(233, 69, 194, 0.15);
+        display: grid;
+        place-items: center;
+        font-size: 32px;
+        color: white;
+        border: 2px solid var(--fucsia);
+        transition: 0.5s;
+      }
+      .socials a:hover {
+        background: var(--fucsia);
+        transform: scale(1.2) translateY(-12px);
+        box-shadow: 0 25px 50px rgba(233, 69, 194, 0.8);
+      }
+      footer p {
+        opacity: 0.75;
+        font-size: 17px;
+      }
+      footer small {
+        display: block;
+        margin-top: 12px;
+        font-size: 15px;
+      }
+
+      /* REPRODUCTOR */
+      #player {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 92vw;
+        max-width: 520px;
+        background: rgba(15, 0, 26, 0.96);
+        backdrop-filter: blur(28px);
+        padding: 20px;
+        border-radius: 60px;
+        box-shadow: 0 25px 70px rgba(233, 69, 194, 0.6);
+        border: 1px solid var(--fucsia);
+        display: none;
+        align-items: center;
+        gap: 20px;
+        z-index: 999;
+      }
+      #player.show {
+        display: flex;
+        animation: up 0.7s;
+      }
+      #player img {
+        width: 78px;
+        height: 78px;
+        border-radius: 14px;
+        object-fit: cover;
+      }
+      #player div {
+        flex: 1;
+        text-align: center;
+      }
+      #player audio {
+        width: 100%;
+        filter: hue-rotate(300deg);
+      }
+
+      @keyframes up {
+        from {
+          opacity: 0;
+          transform: translateX(-50%) translateY(80px);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .nav-links {
+          position: fixed;
+          top: 80px;
+          left: 0;
+          right: 0;
+          background: var(--bg);
+          flex-direction: column;
+          padding: 50px 20px;
+          gap: 35px;
+          transform: translateY(-150%);
+          transition: 0.5s;
+          text-align: center;
+        }
+        .nav-links.active {
+          transform: translateY(0);
+        }
+        .menu-toggle {
+          display: block;
+        }
+        .photo {
+          min-width: 80vw;
+        }
+      }
+    </style>
+  </head>
+  <script>
+    const carousel = document.querySelector(".carousel");
+    const photos = document.querySelectorAll(".photo");
+
+    function updateCenter() {
+      const center = carousel.scrollLeft + carousel.clientWidth / 2;
+
+      photos.forEach((img) => {
+        const rect = img.getBoundingClientRect();
+        const imgCenter = rect.left + rect.width / 2;
+
+        const distance = Math.abs(
+          center - imgCenter + carousel.getBoundingClientRect().left
+        );
+
+        img.classList.remove("active");
+        if (distance < rect.width / 2) {
+          img.classList.add("active");
+        }
+      });
+    }
+
+    carousel.addEventListener("scroll", updateCenter);
+    window.addEventListener("load", updateCenter);
+  </script>
+  <body>
+    <div id="cursor"></div>
+
+    <nav id="nav">
+      <div class="logo">konnyV</div>
+      <i
+        class="fas fa-bars menu-toggle"
+        onclick="document.querySelector('.nav-links').classList.toggle('active')"
+      ></i>
+      <div class="nav-links">
+        <a href="#singles">Música</a>
+        <a href="#photos">Fotos</a>
+        <a href="sobreMi.html">Sobre mí</a>
+        <a href="#contact">Contacto</a>
+      </div>
+    </nav>
+
+    <section id="hero">
+      <img src="portadaKonny.jpg" alt="konnyV" />
+      <div class="hero-content">
+        <h1>konnyV</h1>
+        <p>Pop violeta del futuro</p>
+        <button
+          class="btn"
+          onclick="document.querySelector('#singles').scrollIntoView({behavior:'smooth'})"
+        >
+          ESCUCHAR AHORA
+        </button>
+      </div>
+    </section>
+
+    <section id="singles">
+      <h2>Singles</h2>
+      <div class="grid">
+        <div
+          class="single"
+          onclick="play('Midnight Violet','https://open.spotify.com/embed/track/4uLU6hMCjMI75M1A2tKUQC','https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f')"
+        >
+          <img src=-1493225457124-a3eb161ffa5f?w=800" alt="" />
+          <h3>SAYONARA</h3>
+        </div>
+        <div
+          class="single"
+          onclick="play('Fucsia Dreams','https://open.spotify.com/embed/track/11dFghVXANMlKmJXmKOV7g','https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4')"
+        >
+          <img src=-1511671782779-c97d3d27a1d4?w=800" alt="" />
+          <h3>BABY RACE</h3>
+        </div>
+
+        <div
+          class="single"
+          onclick="play('Electric Kiss','https://open.spotify.com/embed/track/0uUNN1nSoRGm4v0e0z6fJ','https://images.unsplash.com/photo-1516450360452-9312f5e86fc7')"
+        >
+          <img src=-1516450360452-9312f5e86fc7?w=800" alt="" />
+          <h3>LUCES DE LA CIUDAD</h3>
+        </div>
+
+        <div
+          class="single"
+          onclick="play('Neon Heart','https://open.spotify.com/embed/track/3d9DChrdc6B0P9x5mU4nD','https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17')"
+        >
+          <img src=-1614613535308-eb5fbd3d2c17?w=800" alt="" />
+          <h3>Neon Heart</h3>
+        </div>
+      </div>
+
+      <!-- SPOTIFY EMBEDS BONUS -->
+      <div class="spotify-grid">
+        <iframe
+          data-testid="embed-iframe"
+          style="border-radius: 12px"
+          src="https://open.spotify.com/embed/artist/5VD4waPMlygIy9nFSJdbJU?utm_source=generator"
+          width="100%"
+          height="352"
+          frameborder="0"
+          allowfullscreen=""
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+        ></iframe>
+      </div>
+    </section>
+
+    <section id="photos">
+      <h2>konnyV world</h2>
+      <div class="carousel-container">
+        <div class="carousel" id="carousel">
+          <div class="photo">
+            <img src="foto1.jpg" />
+          </div>
+          <div class="photo">
+            <img src="foto2.jpg" />
+          </div>
+          <div class="photo">
+            <img src="foto3.jpg" />
+          </div>
+          <div class="photo">
+            <img src="foto4.jpg" />
+          </div>
+          <div class="photo">
+            <img src="foto5.jpg" />
+          </div>
+          <div class="photo">
+            <img src="foto6.jpg" />
+          </div>
+        </div>
+      </div>
+      <div class="dots" id="dots"></div>
+    </section>
+
+    <!-- UN SOLO FOOTER PRECIOSO -->
+    <footer>
+      <div class="logo">konnyV</div>
+      <div class="socials">
+        <a href="https://instagram.com/konnyv" target="_blank"
+          ><i class="fab fa-instagram"></i
+        ></a>
+        <a href="https://x.com/konnyv" target="_blank"
+          ><i class="fab fa-x-twitter"></i
+        ></a>
+        <a href="https://tiktok.com/@konnyv" target="_blank"
+          ><i class="fab fa-tiktok"></i
+        ></a>
+        <a
+          href="https://open.spotify.com/intl-es/artist/5VD4waPMlygIy9nFSJdbJU"
+          target="_blank"
+          ><i class="fab fa-spotify"></i
+        ></a>
+        <a href="https://youtube.com/@konnyv" target="_blank"
+          ><i class="fab fa-youtube"></i
+        ></a>
+      </div>
+      <p>
+        © 2025 konnyV • Todos los derechos reservados • Hecho por Denis
+        Chiriboga
+      </p>
+      <small>hello@konnyv.com</small>
+    </footer>
+
+    <!-- REPRODUCTOR FLOTANTE -->
+    <div id="player">
+      <img id="cover" src="" alt="" />
+      <div>
+        <div style="font-size: 21px; font-weight: 800">konnyV</div>
+        <div id="song">Toca un single</div>
+      </div>
+      <audio id="audio" controls autoplay></audio>
+    </div>
+
+    <script>
+      const cursor = document.getElementById("cursor");
+      document.addEventListener("mousemove", (e) => {
+        cursor.style.left = e.clientX + "px";
+        cursor.style.top = e.clientY + "px";
+      });
+
+      window.addEventListener("scroll", () =>
+        nav.classList.toggle("scrolled", scrollY > 50)
+      );
+
+      function play(title, url, cover) {
+        document.getElementById("song").textContent = title;
+        document.getElementById("cover").src = cover + "?w=200";
+        document.getElementById("audio").src = url;
+        document.getElementById("player").classList.add("show");
+        document.getElementById("audio").play();
+      }
+
+      // Dots carrusel
+      const carousel = document.getElementById("carousel");
+      const dotsContainer = document.getElementById("dots");
+      const photos = document.querySelectorAll(".photo");
+      photos.forEach((_, i) => {
+        const dot = document.createElement("div");
+        dot.classList.add("dot");
+        if (i === 0) dot.classList.add("active");
+        dot.onclick = () =>
+          carousel.scrollTo({
+            left: photos[i].offsetLeft - 30,
+            behavior: "smooth",
+          });
+        dotsContainer.appendChild(dot);
+      });
+      carousel.addEventListener("scroll", () => {
+        const index = Math.round(
+          carousel.scrollLeft / (photos[0].offsetWidth + 22)
+        );
+        document
+          .querySelectorAll(".dot")
+          .forEach((d, i) => d.classList.toggle("active", i === index));
+      });
+    </script>
+  </body>
+  <script>
+    document.addEventListener("mousemove", (e) => {
+      cursor.style.left = e.clientX + "px";
+      cursor.style.top = e.clientY + "px";
+    });
+  </script>
+</html>
